@@ -41,29 +41,47 @@ main (int argc, char**argv)
 {
 
         ifstream stream;
+        ofstream oStream;
         unsigned int ch =0;
         string filename;
+        string outfilename;
 
         //first parameter is the file to read
         if(2<=argc)
         {
          filename = argv[1];
         }
+        if(3<=argc)
+        {
+         outfilename = argv[2];
+        }
 
         stream.open(filename.c_str(), ios_base::binary);
-
+        oStream.open(outfilename.c_str(), ios_base::binary);
+        
 
         if (stream.bad())
         {
-         cout << "Kann Datei nicht öffnen" << endl;
+         cout << "Kann Datei " << filename << " nicht öffnen" << endl;
+         return 1;
         }
+        if (oStream.bad())
+        {
+         cout << "Kann Datei " << outfilename << " nicht öffnen" << endl;
+         return 2;
+        }
+
+        cout << endl << "Converting byte order from File " << filename << " and writing it to " << outfilename ;
+
         unsigned int newCh  = 0;
         while(stream.good())
         {
                 ch = stream.get();
                 //convert to big/little endian
-                newCh= change_endian(ch);
-                cout << newCh;
+                //newCh= change_endian(ch);
+                newCh = swapByteOrder(ch);
+                //cout << newCh;
+                oStream << newCh;
         }
 
         cout << endl;
