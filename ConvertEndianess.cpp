@@ -1,8 +1,7 @@
 #include <cstdio>
-//#include <conio>
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string>
 
 using namespace std;
 
@@ -38,16 +37,18 @@ unsigned int change_endian(unsigned int x)
     return (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
 }
 
-enum tType
+
+int main (int argc, char**argv)
 {
+
+	enum tType
+	{
         eUndefined =0,
         eInt,
         eShort,
         eLongLong
-};
+	};
 
-main (int argc, char**argv)
-{
 
         ifstream stream;
         ofstream oStream;
@@ -71,11 +72,11 @@ main (int argc, char**argv)
         }
 
         enum tType MyType = eUndefined;
-        if(2 == Type.compare("int"))
+        if(0 == Type.compare("int"))
            MyType = eInt;
-        else if(2 == Type.compare("short"))
+        else if(0 == Type.compare("short"))
            MyType = eShort;
-        else if(2 == Type.compare("long"))
+        else if(0 == Type.compare("long"))
            MyType = eLongLong;
 
         if(eUndefined == MyType)
