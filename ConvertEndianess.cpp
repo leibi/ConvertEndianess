@@ -2,6 +2,7 @@
 //#include <conio>
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -37,6 +38,14 @@ unsigned int change_endian(unsigned int x)
     return (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
 }
 
+enum tType
+{
+        eUndefined =0,
+        eInt,
+        eShort,
+        eLongLong
+};
+
 main (int argc, char**argv)
 {
 
@@ -45,6 +54,7 @@ main (int argc, char**argv)
         unsigned int ch =0;
         string filename;
         string outfilename;
+        string Type = "int";
 
         //first parameter is the file to read
         if(2<=argc)
@@ -55,11 +65,28 @@ main (int argc, char**argv)
         {
          outfilename = argv[2];
         }
+        if(4<=argc)
+        {
+         Type = argv[3];
+        }
+
+        enum tType MyType = eUndefined;
+        if(2 == Type.compare("int"))
+           MyType = eInt;
+        else if(2 == Type.compare("short"))
+           MyType = eShort;
+        else if(2 == Type.compare("long"))
+           MyType = eLongLong;
+
+        if(eUndefined == MyType)
+        {
+                cout << "Could not determine correct type out of " << Type << endl;
+                return 3;
+        }
 
         stream.open(filename.c_str(), ios_base::binary);
         oStream.open(outfilename.c_str(), ios_base::binary);
         
-
         if (stream.bad())
         {
          cout << "Kann Datei " << filename << " nicht öffnen" << endl;
@@ -71,17 +98,29 @@ main (int argc, char**argv)
          return 2;
         }
 
-        cout << endl << "Converting byte order from File " << filename << " and writing it to " << outfilename ;
+        
 
-        unsigned int newCh  = 0;
+        cout << endl << "Converting byte order from File " << filename << " and writing it to " << outfilename << " using type "<<  Type << endl;
+
+        unsigned int newChUi  = 0;
+        unsigned short newChUs  = 0;
+        unsigned long long newChUll  = 0;
+
+
+
+
         while(stream.good())
         {
                 ch = stream.get();
                 //convert to big/little endian
                 //newCh= change_endian(ch);
-                newCh = swapByteOrder(ch);
-                //cout << newCh;
-                oStream << newCh;
+                switch(MyType)
+                {
+                  case eInt: newChUi = swapByteOrder(ch); oStream << newChUi;break;
+                  case eShort: newChUs = swapByteOrder(ch); oStream << newChUs;break;
+                  case eLongLong: newChUll = swapByteOrder(ch); oStream << newChUll;break;
+                  default: cout << "Unknown Type Enum: " << MyType << endl;
+                }
         }
 
         cout << endl;
