@@ -1,0 +1,4 @@
+we want to convert from big endian (ibm) to little endian (linux).
+This is the main goal. But i try to come up with a solution which allows to
+convert between both orders at will
+
