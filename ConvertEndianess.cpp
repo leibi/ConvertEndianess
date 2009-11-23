@@ -29,8 +29,8 @@ unsigned long long swapByteOrder(const unsigned long long& ull)
     ((ull>>24) && 0x0000000000FF0000) |
     ((ull>>40) && 0x000000000000FF00) |
     (ull <<56);
-    }
-    
+}
+
 unsigned int change_endian(unsigned int x)
 {
     unsigned char *ptr = (unsigned char *)&x;
@@ -43,10 +43,10 @@ int main (int argc, char**argv)
 
 	enum tType
 	{
-        eUndefined =0,
-        eInt,
-        eShort,
-        eLongLong
+                eUndefined =0,
+                eInt,
+                eShort,
+                eLongLong
 	};
 
 
@@ -56,6 +56,17 @@ int main (int argc, char**argv)
         string filename;
         string outfilename;
         string Type = "int";
+
+        //show usage if no parameter given
+        if(1==argc)
+        {
+                cout << "Usage: ConvertEndianess <src> <target> [<byte type>] "
+                << endl <<
+                " where <src>: Source binary file" << endl <<
+                " <target>: target binary file" << endl <<
+                " <byte type> the optional byte type. Must be one of [int, short, long] where int the the default" 
+                 << endl;
+        }
 
         //first parameter is the file to read
         if(2<=argc)
@@ -98,23 +109,16 @@ int main (int argc, char**argv)
          cout << "Kann Datei " << outfilename << " nicht öffnen" << endl;
          return 2;
         }
-
         
-
         cout << endl << "Converting byte order from File " << filename << " and writing it to " << outfilename << " using type "<<  Type << endl;
 
         unsigned int newChUi  = 0;
         unsigned short newChUs  = 0;
         unsigned long long newChUll  = 0;
-
-
-
-
+        
         while(stream.good())
         {
                 ch = stream.get();
-                //convert to big/little endian
-                //newCh= change_endian(ch);
                 switch(MyType)
                 {
                   case eInt: newChUi = swapByteOrder(ch); oStream << newChUi;break;
@@ -123,9 +127,7 @@ int main (int argc, char**argv)
                   default: cout << "Unknown Type Enum: " << MyType << endl;
                 }
         }
-
         cout << endl;
-
         return 0;
 }
 
